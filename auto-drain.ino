@@ -1,13 +1,13 @@
 int water_sensor = 2;
-int led = 13;
+int pump = 13;
 unsigned long uptime = 0;
 unsigned long max_uptime = 160;
 unsigned long cooldown = 160;
 
 void setup() {
   pinMode(water_sensor, INPUT);
-  pinMode(led, OUTPUT);
-  digitalWrite(led, LOW);
+  pinMode(pump, OUTPUT);
+  digitalWrite(pump, LOW);
   Serial.begin(57600);
 }
 
@@ -16,7 +16,7 @@ void loop() {
     Serial.print("Water detected.");
     if (uptime < max_uptime) {
       // water was detected recently
-      digitalWrite(led, HIGH);
+      digitalWrite(pump, HIGH);
       uptime++;
       Serial.print("Timeout in ");
       Serial.print(max_uptime - uptime + 1);
@@ -26,7 +26,7 @@ void loop() {
     else {
       // water is probably false positive
       Serial.print("Timeout exceeded. Probably false positive reading. Cooling down...");
-      digitalWrite(led, LOW);
+      digitalWrite(pump, LOW);
       for (unsigned long t = cooldown; t > 0; t--) {
         delay(1000);
         Serial.print(t);
@@ -38,7 +38,7 @@ void loop() {
   }
   else {
     Serial.print("Water NOT detected.\n");
-    digitalWrite(led, LOW);
+    digitalWrite(pump, LOW);
     uptime = 0;
   }
 }
